@@ -34,6 +34,10 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
 
+    // Key to save and restore the position to and from the Bundle
+    private static final String POSITION_KEY = "position";
+    private int mPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,20 +45,25 @@ public class DetailActivity extends AppCompatActivity {
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
 
-        Intent intent = getIntent();
-        if (intent == null) {
-            closeOnError();
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY, DEFAULT_POSITION);
+        } else {
+            Intent intent = getIntent();
+            if (intent == null) {
+                closeOnError();
+            }
+
+            mPosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
         }
 
-        int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-        if (position == DEFAULT_POSITION) {
+        if (mPosition == DEFAULT_POSITION) {
             // EXTRA_POSITION not found in intent
             closeOnError();
             return;
         }
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
-        String json = sandwiches[position];
+        String json = sandwiches[mPosition];
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
         if (sandwich == null) {
             // Sandwich data unavailable
@@ -139,5 +148,11 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(POSITION_KEY, mPosition);
+        super.onSaveInstanceState(outState);
     }
 }
