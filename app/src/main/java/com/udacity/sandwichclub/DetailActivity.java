@@ -34,8 +34,9 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
 
-    // Key to save and restore the position to and from the Bundle
+    // Key for saving and restoring mPosition to and from the Bundle
     private static final String POSITION_KEY = "position";
+
     private int mPosition;
 
     @Override
@@ -77,6 +78,12 @@ public class DetailActivity extends AppCompatActivity {
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(POSITION_KEY, mPosition);
+        super.onSaveInstanceState(outState);
     }
 
     private void closeOnError() {
@@ -148,11 +155,5 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return stringBuilder.toString();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(POSITION_KEY, mPosition);
-        super.onSaveInstanceState(outState);
     }
 }
