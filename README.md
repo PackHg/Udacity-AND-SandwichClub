@@ -4,15 +4,12 @@
 ## Project Overview
 The **Sandwich Club** app shows the details of each sandwich once it is selected.
 
-<img src="https://raw.githubusercontent.com/PackHg/Udacity-AND-SandwichClub/master/screencopies/screen01.png" width="300"> <img src="https://raw.githubusercontent.com/PackHg/Udacity-AND-SandwichClub/master/screenshots/screen02.png" width="300">
+<img src="https://raw.githubusercontent.com/PackHg/Udacity-AND-SandwichClub/master/screencopies/screen01.png" width="300"> <img src="https://raw.githubusercontent.com/PackHg/Udacity-AND-SandwichClub/master/screencopies/screen02.png" width="300">
 
 The baseline of this project is the [Sandwich Club app starter code.](https://github.com/udacity/sandwich-club-starter-code)
 
-This project aims at:
-- Learning how to submit projects for review
-- Practicing JSON parsing to a model object
-- Designing an activity layout
-- Populating all fields in the layout accordingly
+## Keywords
+JSON parsing, Activity layout design, Populating UI
 
 ## Third party libraries used
 * [Picasso](http://square.github.io/picasso/)
