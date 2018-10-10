@@ -12,6 +12,7 @@
 
     <!-- Error messages-->
     <string name="detail_error_message">Sandwich data not available</string>
+    <string name="image_download_error_message">Issue with downloading image</string>
 
     <string-array name="sandwich_names">
         <item>Ham and cheese sandwich</item>

@@ -19,10 +19,13 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
@@ -44,17 +47,15 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
-
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(POSITION_KEY, DEFAULT_POSITION);
         } else {
             Intent intent = getIntent();
             if (intent == null) {
                 closeOnError();
+            } else {
+                mPosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
             }
-
-            mPosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
         }
 
         if (mPosition == DEFAULT_POSITION) {
@@ -72,13 +73,32 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
+        setTitle(sandwich.getMainName());
         populateUI(sandwich);
+
+        final ImageView mIngredientsIv = findViewById(R.id.image_iv);
+        mIngredientsIv.setVisibility(View.VISIBLE);
+        final ProgressBar mProgressBar = findViewById(R.id.loading_spinner_pb);
+        mProgressBar.setVisibility(View.VISIBLE);
+
         Picasso.with(this)
                 .load(sandwich.getImage())
-                .into(ingredientsIv);
+                .into(mIngredientsIv, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
 
-        setTitle(sandwich.getMainName());
-    }
+                    @Override
+                    public void onError() {
+                        // Hide image view and loading indicator, and display an error message
+                        mProgressBar.setVisibility(View.GONE);
+                        mIngredientsIv.setVisibility(View.GONE);
+                        Toast.makeText(DetailActivity.this, getText(R.string.image_download_error_message),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+        }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -104,20 +124,35 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        TextView alsoKnownAsTv = (TextView) findViewById(R.id.also_known_tv);
+        TextView alsoKnownAsLabelTv = findViewById(R.id.also_known_label_tv);
+        TextView alsoKnownAsTv = findViewById(R.id.also_known_tv);
         ArrayList<String> alsoKnownAs = (ArrayList<String>) sandwich.getAlsoKnownAs();
         String s = toStringWithAnd(alsoKnownAs);
-        if (s != null) {
+        if (s != null && !s.isEmpty()) {
+            alsoKnownAsLabelTv.setVisibility(View.VISIBLE);
+            alsoKnownAsTv.setVisibility(View.VISIBLE);
             alsoKnownAsTv.setText(s);
+        } else {
+            alsoKnownAsLabelTv.setVisibility(View.GONE);
+            alsoKnownAsTv.setVisibility(View.GONE);
         }
 
-        TextView placeOfOriginTv = (TextView) findViewById(R.id.origin_tv);
-        placeOfOriginTv.setText(sandwich.getPlaceOfOrigin());
+        TextView placeOfOriginLabelTv = findViewById(R.id.origin_label_tv);
+        TextView placeOfOriginTv = findViewById(R.id.origin_tv);
+        String origin = sandwich.getPlaceOfOrigin();
+        if (!origin.isEmpty()) {
+            placeOfOriginLabelTv.setVisibility(View.VISIBLE);
+            placeOfOriginTv.setVisibility(View.VISIBLE);
+            placeOfOriginTv.setText(sandwich.getPlaceOfOrigin());
+        } else {
+            placeOfOriginLabelTv.setVisibility(View.GONE);
+            placeOfOriginTv.setVisibility(View.GONE);
+        }
 
-        TextView descriptionTv = (TextView) findViewById(R.id.description_tv);
+        TextView descriptionTv = findViewById(R.id.description_tv);
         descriptionTv.setText(sandwich.getDescription());
 
-        TextView ingredientsTv = (TextView) findViewById(R.id.ingredients_tv);
+        TextView ingredientsTv = findViewById(R.id.ingredients_tv);
         ArrayList<String> ingredients = (ArrayList<String>) sandwich.getIngredients();
         s = toStringWithAnd(ingredients);
         if (s != null) {

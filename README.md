@@ -1,5 +1,5 @@
 # Sandwich Club Project
-This is the 1st project of the udacity Android Developer Nanodegree.
+This is the 1st project of the Udacity Android Developer Nanodegree.
 
 ## Project Overview
 The **Sandwich Club** app shows the details of each sandwich once it is selected.
